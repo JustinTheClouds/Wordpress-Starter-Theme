@@ -6,7 +6,7 @@
  */
 
     //Initialize the update checker.
-    require 'theme-updates/theme-update-checker.php';
+    require_once dirname( __FILE__ ) . '/theme-updates/theme-update-checker.php';
     $update_checker = new ThemeUpdateChecker(
         'Starter',
         'https://raw.githubusercontent.com/JustinTheClouds/Wordpress-Starter-Theme/master/version-info.json'
