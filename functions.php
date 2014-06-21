@@ -1,31 +1,39 @@
 <?php
 /**
  * @package WordPress
- * @subpackage HTML5-Reset-WordPress-Theme
+ * @subpackage JustinTheClouds Starter Theme
  * @since HTML5 Reset 2.0
  */
 
 	// Options Framework (https://github.com/devinsays/options-framework-plugin)
 	if ( !function_exists( 'optionsframework_init' ) ) {
-		define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/_/admin/' );
-		require_once dirname( __FILE__ ) . '/_/admin/options-framework.php';
+		define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/admin/' );
+		require_once dirname( __FILE__ ) . '/admin/options-framework.php';
     }	
         
     // Enable archive page menu adding
-    // require_once dirname(__FILE__) . '/_/admin/enable-custom-archive-pages.php';
+    // require_once dirname(__FILE__) . '/admin/enable-custom-archive-pages.php';
 
 	// Theme Setup (based on twentythirteen: http://make.wordpress.org/core/tag/twentythirteen/)
-	function html5reset_setup() {
-		load_theme_textdomain( 'html5reset', get_template_directory() . '/languages' );
+	function justintheclouds_setup() {
+		load_theme_textdomain( 'justintheclouds', get_template_directory() . '/languages' );
 		add_theme_support( 'automatic-feed-links' );	
 		add_theme_support( 'structured-post-formats', array( 'link', 'video' ) );
 		add_theme_support( 'post-formats', array( 'aside', 'audio', 'chat', 'gallery', 'image', 'quote', 'status' ) );
 		add_theme_support( 'post-thumbnails' );
+        
+        // This theme uses wp_nav_menu() in two locations.
+        register_nav_menus( array(
+            'primary'   => __( 'Top primary menu', 'justintheclouds' ),
+            'footer' => __( 'Footer menu if different from primary', 'justintheclouds' ),
+        ) );
+        
+        add_editor_style( array( 'css/entry-content-base.css', get_template_directory_uri() ) );
 	}
-	add_action( 'after_setup_theme', 'html5reset_setup' );
+	add_action( 'after_setup_theme', 'justintheclouds_setup' );
 	
-	// Scripts & Styles (based on twentythirteen: http://make.wordpress.org/core/tag/twentythirteen/)
-	function html5reset_scripts_styles() {
+	// Scripts & Styles
+	function justintheclouds_scripts_styles() {
 		global $wp_styles;
 
 		// Load Comments	
@@ -33,20 +41,19 @@
 			wp_enqueue_script( 'comment-reply' );
 	
 		// Load Stylesheets
-        wp_enqueue_style( 'reset', get_template_directory_uri() . '/reset.css' );
-        wp_enqueue_style( 'gumby', get_template_directory_uri() . '/_/css/gumby-bare.css' );
+        wp_enqueue_style( 'gumby', get_template_directory_uri() . '/css/gumby-bare.css' );
+        wp_enqueue_style( 'base', get_template_directory_uri() . '/css/styles.css' );
         wp_enqueue_style( 'style', get_stylesheet_uri() );
 	
 		// Load scripts
-		wp_enqueue_script( 'modernizr', get_template_directory_uri() . '/_/js/modernizr-2.7.0.dev.js' );
-		wp_enqueue_script( 'jquery', get_template_directory_uri() . '/_/js/jquery-2.1.0.js' );
-		wp_enqueue_script( 'prefixfree', get_template_directory_uri() . '/_/js/prefixfree.min.js' );
+		wp_enqueue_script( 'jquery', get_template_directory_uri() . '/js/jquery-2.1.0.js' );
+		wp_enqueue_script( 'jquery', get_template_directory_uri() . '/js/functions.js', array('jquery') );
 		
 	}
-	add_action( 'wp_enqueue_scripts', 'html5reset_scripts_styles' );
+	add_action( 'wp_enqueue_scripts', 'justintheclouds_scripts_styles' );
 	
 	// WP Title (based on twentythirteen: http://make.wordpress.org/core/tag/twentythirteen/)
-	function html5reset_wp_title( $title, $sep ) {
+	function justintheclouds_wp_title( $title, $sep ) {
 		global $paged, $page;
 	
 		if ( is_feed() )
@@ -62,7 +69,7 @@
 	
         // Add a page number if necessary.
 		if ( $paged >= 2 || $page >= 2 )
-			$title = "$title $sep " . sprintf( __( 'Page %s', 'html5reset' ), max( $paged, $page ) );
+			$title = "$title $sep " . sprintf( __( 'Page %s', 'justintheclouds' ), max( $paged, $page ) );
 //FIX
 //		if (function_exists('is_tag') && is_tag()) {
 //		   single_tag_title("Tag Archive for &quot;"); echo '&quot; - '; }
@@ -83,7 +90,7 @@
 	
 		return $title;
 	}
-	add_filter( 'wp_title', 'html5reset_wp_title', 10, 2 );
+	add_filter( 'wp_title', 'justintheclouds_wp_title', 10, 2 );
 
 	// Load jQuery
 	if ( !function_exists( 'core_mods' ) ) {
@@ -106,9 +113,9 @@
 
 	// Widgets
 	if ( function_exists('register_sidebar' )) {
-		function html5reset_widgets_init() {
+		function justintheclouds_widgets_init() {
 			register_sidebar( array(
-				'name'          => __( 'Sidebar Widgets', 'html5reset' ),
+				'name'          => __( 'Sidebar Widgets', 'justintheclouds' ),
 				'id'            => 'sidebar-primary',
 				'before_widget' => '<div id="%1$s" class="widget %2$s">',
 				'after_widget'  => '</div>',
@@ -116,19 +123,27 @@
 				'after_title'   => '</h3>',
 			) );
 		}
-		add_action( 'widgets_init', 'html5reset_widgets_init' );
+		add_action( 'widgets_init', 'justintheclouds_widgets_init' );
 	}
 
 	// Navigation - update coming from twentythirteen
-	function post_navigation() {
-		echo '<div class="navigation">';
-		echo '	<div class="next-posts">'.get_next_posts_link('&laquo; Older Entries').'</div>';
-		echo '	<div class="prev-posts">'.get_previous_posts_link('Newer Entries &raquo;').'</div>';
+	function postNavigation() {
+        
+        echo '<div class="navigation">';
+        
+        if(is_single()) {
+            echo '	<div class="next-post" rel="next">'. next_post_link() .'</div>';
+            echo '	<div class="prev-post" rel="prev">'. previous_post_link() .'</div>';
+        } else {
+            echo '	<div class="next-posts" rel="next">'. next_posts_link() .'</div>';
+            echo '	<div class="prev-posts" rel="prev">'. previous_posts_link() .'</div>';
+        }
+        
 		echo '</div>';
 	}
 
 	// Posted On
-	function posted_on() {
+	function postedOn() {
 		printf( __( '<span class="sep">Posted </span><a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a> by <span class="byline author vcard">%5$s</span>', '' ),
 			esc_url( get_permalink() ),
 			esc_attr( get_the_time() ),
@@ -137,14 +152,80 @@
 			esc_attr( get_the_author() )
 		);
 	}
+
+    // Archive Page Heading
+    function archiveHeading($el='h2') {
         
-    function social_icons($size) {
-        echo '<div class="social-icons">
-                <a href="' . of_get_option("social_facebook") . '" target="_blank"><i class="fa fa-facebook fa-'.$size.'"></i></a>
-                <a href="' . of_get_option("social_twitter") . '" target="_blank"><i class="fa fa-twitter fa-'.$size.'"></i></a>
-                <a href="' . of_get_option("social_instagram") . '" target="_blank"><i class="fa fa-instagram fa-'.$size.'"></i></a>
-                <a href="' . of_get_option("social_pinterest") . '" target="_blank"><i class="fa fa-pinterest fa-'.$size.'"></i></a>
-            </div>';
+        // Hack. Set $post so that the_date() works.
+        $post = $posts[0];
+
+        // If this is a category archive
+        if (is_category()) {
+            $title = __('Archive for the', 'justintheclouds') . " &#8216; " . single_cat_title('', false) . " &#8217; " . __('Category', 'justintheclouds');
+        
+        // If this is a tag archive
+        } elseif( is_tag() ) {
+            $title = __('Posts Tagged', 'justintheclouds') . " &#8216; " . single_tag_title('', false) . " &#8217;";
+            
+        // If this is a daily archive
+        } elseif (is_day()) {
+            $title = __('Archive for', 'justintheclouds') . ' ' . the_time('F jS, Y');
+            
+        // If this is a monthly archive
+        } elseif (is_month()) {
+            $title = __('Archive for', 'justintheclouds') . ' ' . the_time('F, Y');
+            
+        // If this is a yearly archive
+        } elseif (is_year()) {
+           $title = __('Archive for', 'justintheclouds') . ' ' . the_time('Y');
+                              
+        // If this is an author archive
+        } elseif (is_author()) {
+            $title = __('Author Archive', 'justintheclouds');
+            
+        // If this is a paged archive
+        } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {
+            $title = __('Blog Archives', 'justintheclouds');
+        }
+        
+        echo "<$el class=\"archive-title\">$title</$el>";
+    }
+
+    function socialIcons($size) {
+        
+        $fb = of_get_option("social_facebook");
+        $tw = of_get_option("social_twitter");
+        $ig = of_get_option("social_instagram");
+        $pi = of_get_option("social_pinterest");
+        
+        if(!$fb && !$tw && !$ig && !$pi) return;
+        
+        echo '<div class="social-icons">';
+        if($fb) {
+            echo '<a href="' . $fb . '" target="_blank"><i class="fa fa-facebook fa-'.$size.'"></i></a>';
+        }
+        if($tw) {
+            echo '<a href="' . $tw . '" target="_blank"><i class="fa fa-twitter fa-'.$size.'"></i></a>';
+        }
+        if($ig) {
+            echo '<a href="' . $ig . '" target="_blank"><i class="fa fa-instagram fa-'.$size.'"></i></a>';
+        }
+        if($pi) {
+            echo '<a href="' . $pi . '" target="_blank"><i class="fa fa-pinterest fa-'.$size.'"></i></a>';
+        }
+        echo '</div>';
+    }
+
+    // Add schema.org microdata
+    function microdata($type) {
+        switch($type) {
+            case 'BlogPosting':
+                echo '<meta itemprop="name" content="' . get_the_title() . '" />';
+                echo '<meta itemprop="url" content="' . get_permalink() . '" />';
+                echo '<meta itemprop="articleBody" content="' . get_the_content() . '" />';
+                echo '<meta itemprop="datePublished" content="' . get_the_date('c') . '" />';
+                break;
+        }
     }
 
 ?>

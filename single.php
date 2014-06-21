@@ -6,23 +6,33 @@
  */
  get_header(); ?>
 
+    <div class="content columns eight">
+        
 	<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
 		<article <?php post_class() ?> id="post-<?php the_ID(); ?>">
 			
-			<h1 class="entry-title"><?php the_title(); ?></h1>
+            <div class="entry">
+                
+                <h1 class="entry-title"><?php the_title(); ?></h1>
 
-			<div class="entry-content">
-				
-				<?php the_content(); ?>
+                <div class="entry-content">
 
-				<?php wp_link_pages(array('before' => __('Pages: '), 'next_or_number' => 'number')); ?>
-				
-				<?php the_tags( __('Tags: '), ', ', ''); ?>
-			
-				<?php posted_on(); ?>
+                    <?php the_content(); ?>
+                    
+                </div>
+                
+                <div class="entry-meta">
 
-			</div>
+                    <?php wp_link_pages(array('before' => __('Pages: '), 'next_or_number' => 'number')); ?>
+
+                    <?php the_tags( __('Tags: '), ', ', ''); ?>
+
+                    <?php postedOn(); ?>
+
+                </div>
+                
+            </div>
 			
 			<?php edit_post_link(__('Edit this entry'),'','.'); ?>
 			
@@ -32,7 +42,9 @@
 
 	<?php endwhile; endif; ?>
 
-<?php post_navigation(); ?>
+    <?php postNavigation(); ?>
+        
+    </div>
 	
 <?php get_sidebar(); ?>
 

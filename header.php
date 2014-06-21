@@ -112,17 +112,19 @@
 
 </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?> itemscope itemtype="http://schema.org/Blog">
 	
-	<!-- not needed? up to you: http://camendesign.com/code/developpeurs_sans_frontieres -->
-	<div id="wrapper">
+	<div id="wrapper" class="row">
 
-		<header id="header" role="banner">
-			<h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><span class="screen-reader"><?php bloginfo( 'name' ); ?></span><img src="<?php echo of_get_option('design_logo'); ?>" /></a></h1>
-			<div class="description"><?php bloginfo( 'description' ); ?></div>
+		<header id="header" class="row">
+            <div class="banner row" role="banner">
+                <h1 class="logo" role="heading"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home" itemprop="url"><span class="screen-reader-text" itemprop="name"><?php bloginfo( 'name' ); ?></span><img src="<?php echo of_get_option('design_logo'); ?>" itemprop="image" /></a></h1>
+                <div class="description" itemprop="about"><?php bloginfo( 'description' ); ?></div>
+            </div>
+            
+            <nav class="row" role="navigation">
+                <?php wp_nav_menu( array('menu' => 'primary') ); ?>
+            </nav>
 		</header>
-		
-		<nav id="nav" role="navigation">
-			<?php wp_nav_menu( array('menu' => 'primary') ); ?>
-		</nav>
-
+        
+        <main class="row" role="main">

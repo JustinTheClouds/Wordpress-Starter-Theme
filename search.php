@@ -6,11 +6,13 @@
  */
  get_header(); ?>
 
+    <div class="columns eight">
+
 	<?php if (have_posts()) : ?>
 
-		<h2><?php _e('Search Results','html5reset'); ?></h2>
+		<h2><?php _e('Search Results','justintheclouds'); ?></h2>
 
-		<?php post_navigation(); ?>
+		<?php postNavigation(); ?>
 
 		<?php while (have_posts()) : the_post(); ?>
 
@@ -18,7 +20,7 @@
 
 				<h2><?php the_title(); ?></h2>
 
-				<?php posted_on(); ?>
+				<?php postedOn(); ?>
 
 				<div class="entry">
 
@@ -30,13 +32,15 @@
 
 		<?php endwhile; ?>
 
-		<?php post_navigation(); ?>
+		<?php postNavigation(); ?>
 
 	<?php else : ?>
 
-		<h2><?php _e('Nothing Found','html5reset'); ?></h2>
+		<h2><?php _e('Nothing Found','justintheclouds'); ?></h2>
 
 	<?php endif; ?>
+        
+    </div>/
 
 <?php get_sidebar(); ?>
 
