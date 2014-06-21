@@ -5,6 +5,13 @@
  * @since HTML5 Reset 2.0
  */
 
+    //Initialize the update checker.
+    require 'theme-updates/theme-update-checker.php';
+    $update_checker = new ThemeUpdateChecker(
+        'Starter',
+        'https://raw.githubusercontent.com/JustinTheClouds/Wordpress-Starter-Theme/master/version-info.json'
+    );
+
 	// Options Framework (https://github.com/devinsays/options-framework-plugin)
 	if ( !function_exists( 'optionsframework_init' ) ) {
 		define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/admin/' );
